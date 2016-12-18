@@ -1,0 +1,51 @@
+* {
+	font-size: 15px;
+}
+
+.left {
+	float: left;
+}
+
+#codeInput {
+	height: 600px;
+	width: 350px;
+	padding: 5px;
+	background: #272822;
+	color: white;
+}
+
+#codeOutput {
+	display: block;
+	padding: 5px;
+	height: 600px;
+	width: 350px;
+	background: #272822;
+	color: white;
+}
+
+.right {
+	float: right;
+	width: 350px;
+	height: 600px;
+	border: 1px solid black;
+}
+
+.red {
+	color: #E52369;
+}
+
+.blue {
+	color: #66D9EF;
+}
+
+.yellow {
+	color: #E6DB74;
+}
+
+.green {
+	color: #6DC62B;
+}
+
+.orange {
+	color: #D96D1F;
+}
