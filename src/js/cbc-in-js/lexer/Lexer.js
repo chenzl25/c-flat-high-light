@@ -44,8 +44,7 @@ Lexer.prototype = {
 
     token = this.getToken()
     while (token.type !== 'EOF') {
-      if (token.type !== 'lineComment' && token.type !== 'blockComment')
-        result.push(token);
+      result.push(token);
       token = this.getToken();
     }
     result.push(token); // EOF
@@ -261,6 +260,7 @@ Lexer.prototype = {
     var comment;
     var token = null;
     var before_colno = this.colno;
+    var before_lineno = this.lineno;
     var lastLineBegin = -1;
     for (var i = this.cursor + 2; i < this.input.length; i++) {
       if (this.input[i] === '*' && this.input[i+1] === '/') {
@@ -273,7 +273,7 @@ Lexer.prototype = {
       }
     }
     if (comment) {
-      token = new Token("blockComment", comment, this.lineno, before_colno);
+      token = new Token("blockComment", comment, before_lineno, before_colno);
       if (lastLineBegin == -1) {
         this.incColNo(comment.length);
       } else {

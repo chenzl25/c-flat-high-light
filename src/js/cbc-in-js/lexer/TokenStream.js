@@ -64,7 +64,16 @@ TokenStream.prototype = {
 
   restore: function(handle) {
     this.cursor = handle;
-  }
+  },
 
+  withoutComment: function() {
+    this._tokens = this._tokens.filter(function(token) {
+      if (token.type !== 'lineComment' && token.type !== 'blockComment')
+        return true;
+      else 
+        return false;
+    });
+    return this;
+  }
 }
 

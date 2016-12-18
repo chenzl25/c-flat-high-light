@@ -1,6 +1,5 @@
 var cbcParse = require('./cbc-in-js/cbc.js').cbcParse;
 
-var src = 'import a;\nint foo (void) {\n  int a = 1, b = 2, c;\n  c = a + b;\n  return c;\n}';
 
 function init() {
 	// make textareas can enter tab
@@ -20,18 +19,25 @@ function init() {
 
 window.onload = function() {
 	init();
-	document.getElementById("codeInput").value = src;
-	// document.getElementById("codeOutput").textContent = src;
-	var obj = cbcParse(src);
-	// console.log(obj);
-	// $("#codeOutput").html('haha<span class="red">ggg</span>ddd')
-	$("#codeOutput").html(token2html(obj.tokens));
+	$("#btn").click(highLight);
+}
+
+function highLight() {
+	var obj = cbcParse($("#codeInput").val());
+	if (typeof obj == 'string') {
+		errorMsg = obj;
+		$('#error').text(errorMsg);
+		return;
+	} else {
+		$("#codeOutput").html(token2html(obj.tokens));
+		$('#error').text('');
+	}
 }
 
 function token2html(tokens) {
 	var s = "";
 	var lineno = 1, colno = 1;
-	console.log(tokens)
+	// console.log(tokens)
 	for (var i = 0; i < tokens.length -1 /*-1 for EOF*/; i++) {
 		var len =  tokens[i].value.length;
 		if (tokens[i].lineno > lineno) {
@@ -43,11 +49,85 @@ function token2html(tokens) {
 			s += space(tokens[i].colno - colno);
 			colno = tokens[i].colno;
 		}
-		s += tokens[i].value;
+		lineno += resolveBlockCommentLine(tokens[i]);
+		s += color(tokens[i]);
 		colno += len;
 	}
-	console.log(JSON.stringify(s))
 	return s;
+}
+
+function color(token) {
+	type = token.type;
+	value = token.value;
+	if (type == 'keyWord') {
+		if (isRed(value)) {
+			return span(value, 'red');
+		} else {
+			return span(value, 'blue');
+		}
+	} else if (type == 'number') {
+		return span(value, 'purple');
+	} else if (type == 'string' || type == 'character') {
+		return span(value, 'yellow');
+	} else if (token.type == 'lineComment' || token.type == 'blockComment') {
+		return span(replaceLine(value.replace(/ /g, '&nbsp')), 'gray');
+	} else if (token.color) {
+		return span(value, token.color);
+	} else {
+		return value
+	}
+}
+
+function resolveBlockCommentLine(token) {
+	var n = 0;
+	if (token.type == 'blockComment') {
+		s = token.value;
+		for (var i = 0; i < s.length; i++) {
+			if (s[i] == '\n') {
+				n++;
+			}
+		}
+	}
+	return n;
+}
+
+function replaceLine(s) {
+	var result = '';
+	for (var i = 0; i < s.length; i++) {
+		if (s[i] == '\n') {
+			result += '<br/>'
+		} else {
+			result += s[i];
+		}
+	}
+	return result;
+}
+
+function isRed(value) {
+	switch (value) {
+		case 'if':
+		case 'while':
+		case 'do':
+		case 'for':
+		case 'else':
+		case 'return':
+		case 'import':
+		case 'const':
+		case 'goto':
+		case 'break':
+		case 'default':
+		case 'sizeof':
+		case 'extern':
+		case 'static':
+		case 'continue':
+			return true;
+		default:
+			return false;
+	}
+}
+
+function span(value, color) {
+	return '<span class="' + color + '">' + value + '</span>';
 }
 
 

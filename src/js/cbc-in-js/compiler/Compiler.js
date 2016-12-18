@@ -54,10 +54,11 @@ Compiler.prototype = {
         // // obj.asm = codeGenerator.generate(obj.ir);
         filesResult.push(obj);
       } catch (err) {
-        console.log(file.options.fileName)
+        // console.log(file.options.fileName)
         console.log(err);
-        console.log(err.stack);
+        // console.log(err.stack);
         console.log('')
+        return err.message;
       }
     }
     return filesResult;

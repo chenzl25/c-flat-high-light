@@ -19,7 +19,7 @@ function Parser(tokens, loader ,options) {
     throw new Error('Expected "options" to be an object but got "' + (typeof options) + '"');
   }
 
-  this.ts = new tokenStream(tokens, options); // tokenStream
+  this.ts = (new tokenStream(tokens, options)).withoutComment(); // tokenStream
   this.loader = loader;
   this.options = options;
   this.ast = null;
@@ -242,6 +242,9 @@ Parser.prototype = {
     
     priv=this.storage();
     ret=this.typeref();
+    // ----- high light --------
+    this.peek().color = 'green';
+    // -------------------------
     n=this.name();
     this.acceptSymbol('(');
     ps=this.params();
@@ -288,6 +291,9 @@ Parser.prototype = {
     var type; // TypeNode
     var n;    // String
     type = this.type();
+    // ----- high light --------
+    this.peek().color = 'orange';
+    // -------------------------
     n = this.name();
     return new entity.CBCParameter(type, n);
   },
@@ -682,6 +688,9 @@ Parser.prototype = {
     var membs; // Slot[]
 
     t = this.acceptKeyWord('struct');
+    // ----- high light --------
+    this.peek().color = 'green';
+    // -------------------------
     n = this.name();
     membs = this.memberList();
     this.acceptSymbol(';');
@@ -696,6 +705,9 @@ Parser.prototype = {
     var membs; // Slot[]
 
     t = this.acceptKeyWord('union');
+    // ----- high light --------
+    this.peek().color = 'green';
+    // -------------------------
     n = this.name();
     membs = this.memberList();
     this.acceptSymbol(';');
@@ -723,6 +735,9 @@ Parser.prototype = {
   slot: function() {
     var t; // TypeNode
     var n; // String
+    // ----- high light --------
+    this.peek().color = 'green';
+    // -------------------------
     t = this.type();
     n = this.name();
     return new ast.Slot(t, n);
@@ -757,6 +772,7 @@ Parser.prototype = {
     var ref;    // TypeRef
     var n;      // number
     var params  // ParamTypeRefs
+
     ref = this.typerefBase();
     out: while (true) {
       switch (this.peek().value) {
@@ -868,10 +884,16 @@ Parser.prototype = {
           return type.IntegerTypeRef.longRef(this.location(t));
         case 'struct':
           t = this.acceptKeyWord('struct');
+          // ----- high light --------
+          this.peek().color = 'green';
+          // -------------------------
           name = this.acceptIdentifier().value;
           return new type.StructTypeRef(this.location(t), name);
         case 'union':
           t = this.acceptKeyWord('union');
+          // ----- high light --------
+          this.peek().color = 'green';
+          // -------------------------
           name = this.acceptIdentifier().value;
           return new type.UnionTypeRef(this.location(t), name);
         default:
@@ -940,6 +962,9 @@ Parser.prototype = {
   typedef: function() {
     var t = this.acceptKeyWord('typedef');
     var ref = this.typeref();
+    // ----- high light --------
+    this.peek().color = 'green';
+    // -------------------------
     var name = this.acceptIdentifier().value;
     this.acceptSymbol(';');
     

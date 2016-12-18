@@ -15,13 +15,16 @@ function cbcParse(src) {
   var compiler = new Compiler();
 
   var filesResult = compiler.compile(files);
-
-  var result;
-  filesResult.forEach(function(obj) {
-    // console.log(obj.tokens);
-    // astPrinter.print(obj.ast);
-    result = obj
-  });
-  return result;
+  if (typeof filesResult == 'string') {
+    return filesResult; // when error happen
+  } else {
+    var result;
+    filesResult.forEach(function(obj) {
+      // console.log(obj.tokens);
+      // astPrinter.print(obj.ast);
+      result = obj
+    });
+    return result;
+  }
 }
 

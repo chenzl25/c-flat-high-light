@@ -4,30 +4,41 @@
 
 .left {
 	float: left;
+	width: 50%;
 }
 
 #codeInput {
-	height: 600px;
-	width: 350px;
+	height: 580px;
+	/*width: 350px;*/
+	width: 90%;
 	padding: 5px;
 	background: #272822;
 	color: white;
+	overflow-y: scroll;
 }
 
 #codeOutput {
 	display: block;
 	padding: 5px;
-	height: 600px;
-	width: 350px;
+	height: 580px;
+	/*width: 350px;*/
 	background: #272822;
 	color: white;
+	overflow-y: scroll;
 }
 
 .right {
 	float: right;
-	width: 350px;
+	width: 50%;
 	height: 600px;
-	border: 1px solid black;
+}
+
+#error {
+	color: red;
+}
+
+p {
+	margin: 0;
 }
 
 .red {
@@ -48,4 +59,12 @@
 
 .orange {
 	color: #D96D1F;
+}
+
+.purple {
+	color: #9E75E8;
+}
+
+.gray {
+	color:#75715E;
 }
